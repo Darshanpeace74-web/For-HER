@@ -11,32 +11,44 @@ const LEVEL_1_DATA = {
         {
             id: 1,
             question: "Where did we meet for the first time?",
-            acceptedAnswers: ["college", "at college", "college campus"]
+            keywords: ["school", "college", "class", "campus", "university", "institute"],
+            acceptAny: false,
+            response: "Correct uh ga 🫡"
         },
         {
             id: 2,
             question: "Which nickname do I like the most?",
-            acceptedAnswers: ["baby", "babe"]
+            keywords: ["darshan", "mama", "thangoo"],
+            acceptAny: false,
+            response: "Paaraa 😚"
         },
         {
             id: 3,
             question: "Out of all the times we met, which date do you love the most?",
-            acceptedAnswers: ["14/02/2022"]
+            keywords: ["date", "meet", "meeting", "day", "/"],
+            acceptAny: false,
+            response: "Finee 🫣"
         },
         {
             id: 4,
             question: "Which song do we love listening to together?",
-            acceptedAnswers: ["perfect", "perfect by ed sheeran"]
+            keywords: ["song", "music", "tune", "melody"],
+            acceptAny: true,
+            response: "Laaa nalla erukum 😌"
         },
         {
             id: 5,
             question: "In our relationship, which area do we want to improve the most?",
-            acceptedAnswers: ["communication", "understanding"]
+            keywords: [],
+            acceptAny: true,
+            response: "Laa paathukalam 😤"
         },
         {
             id: 6,
-            question: "What does VALOUR mean to us in our relationship?",
-            acceptedAnswers: ["trust", "honesty", "strength", "commitment"]
+            question: "In our relationship, which part should be developed by VAPOUR?",
+            keywords: [],
+            acceptAny: true,
+            response: "Okk officer 😁"
         }
     ]
 };
@@ -46,26 +58,26 @@ const LEVEL_2_DATA = {
     type: "choice",
     options: ["Me", "You"],
     questions: [
-        { id: 1, question: "Who gets angry first?", correct: "Me" },
-        { id: 2, question: "Who forgives first?", correct: "You" },
-        { id: 3, question: "Who is more emotional?", correct: "You" },
-        { id: 4, question: "Who usually starts arguments unintentionally?", correct: "Me" },
-        { id: 5, question: "Who cannot stay without talking things out?", correct: "You" },
-        { id: 6, question: "Who loves more deeply and gets more attached?", correct: "You" },
-        { id: 7, question: "Who gets angry but cools down in minutes?", correct: "Me" },
-        { id: 8, question: "Who laughs even in serious situations?", correct: "You" },
-        { id: 9, question: "Who pretends not to care but actually does?", correct: "You" },
-        { id: 10, question: "Who says 'I'm fine' when they're clearly not?", correct: "You" },
-        { id: 11, question: "Who forgives easily but remembers everything?", correct: "You" },
-        { id: 12, question: "Who overreacts first and regrets later?", correct: "Me" },
-        { id: 13, question: "Who checks on others silently without saying much?", correct: "You" },
-        { id: 14, question: "Who turns awkward moments into funny ones?", correct: "You" },
-        { id: 15, question: "Who talks nonsense when sleepy?", correct: "Me" },
-        { id: 16, question: "Who remembers random silly moments?", correct: "You" },
-        { id: 17, question: "Who gets excited over small wins?", correct: "You" },
-        { id: 18, question: "Who cannot stay mad for long?", correct: "Me" },
-        { id: 19, question: "Who is less reactive in tough situations?", correct: "You" },
-        { id: 20, question: "Who solves problems calmly even in hard situations?", correct: "You" }
+        { id: 1, question: "Who gets angry first?", responseMe: "theriyama touch panetiga nanaikura 🧐", responseYou: "nanaichaa 😏" },
+        { id: 2, question: "Who forgives first?", response: "Unmai tha ga 🙂‍↕️" },
+        { id: 3, question: "Who is more emotional?", response: "Yeahh definitely 😁" },
+        { id: 4, question: "Who usually starts arguments unintentionally?", response: "Enna choose pandrathu nu eh trla thanaa 🤭" },
+        { id: 5, question: "Who is more possessive?", response: "Ohh really 🧐" },
+        { id: 6, question: "Who is more romantic?", response: "Illa ga .. both tha 😉🙈" },
+        { id: 7, question: "Who showers less?", responseMe: "ahh athuu 😤", responseYou: "aii thoodaa ..😏 try again gaa!" },
+        { id: 8, question: "Who starts to kiss first?", response: "🤭😚" },
+        { id: 9, question: "Who talks more dark things? 🌚", response: "Laaa 😁" },
+        { id: 10, question: "Who is funnier?", response: "Amaa 😂" },
+        { id: 11, question: "Who forgives easily but remembers everything?", response: "Ohhh 😯" },
+        { id: 12, question: "Who overreacts first and regrets later?", response: "Yess 💯" },
+        { id: 13, question: "Who is the law breaker?", response: "🙆🏻" },
+        { id: 14, question: "Who turns awkward moments into funny ones?", response: "😂😂" },
+        { id: 15, question: "Who gets moody first? 🫣🙈", response: "Yess 😂😅🌚" },
+        { id: 16, question: "Who remembers random silly moments?", response: "Yeahh but both also dude 🙂‍↕️😌" },
+        { id: 17, question: "Who gets excited over small wins?", response: "Yess 😅" },
+        { id: 18, question: "Who apologises first?", response: "Ofcourse daw 😓" },
+        { id: 19, question: "Who has more patience?", response: "Unmai thaa ga 🙇🏻🤍" },
+        { id: 20, question: "Who is a better chef?", response: "Really 🧐🤔" }
     ]
 };
 
@@ -73,8 +85,13 @@ const LEVEL_2_DATA = {
 let state = {
     userName: "",
     currentLevel: 0,
-    currentQuestion: 0
+    currentQuestion: 0,
+    level1Answers: [],
+    level2Answers: []
 };
+
+// Pending action after continue button click
+let pendingAction = null;
 
 // === DOM ELEMENTS ===
 const pages = {
@@ -176,6 +193,8 @@ function validateStart() {
     state.userName = name;
     state.currentLevel = 1;
     state.currentQuestion = 0;
+    state.level1Answers = [];
+    state.level2Answers = [];
 
     showCorrectReaction("🥰", "Welcome, " + name + "! 💕");
     setTimeout(() => {
@@ -199,7 +218,8 @@ function loadLevel1Question() {
 }
 
 function submitLevel1() {
-    const answer = document.getElementById("level1Answer").value.trim().toLowerCase();
+    const answer = document.getElementById("level1Answer").value.trim();
+    const answerLower = answer.toLowerCase();
     const question = LEVEL_1_DATA.questions[state.currentQuestion];
 
     if (!answer) {
@@ -207,9 +227,18 @@ function submitLevel1() {
         return;
     }
 
-    const isCorrect = question.acceptedAnswers.some(
-        accepted => accepted.toLowerCase() === answer
-    );
+    // Check if answer is valid
+    let isCorrect = false;
+
+    if (question.acceptAny) {
+        // Accept any non-empty answer
+        isCorrect = true;
+    } else if (question.keywords && question.keywords.length > 0) {
+        // Check if answer contains any of the keywords
+        isCorrect = question.keywords.some(keyword =>
+            answerLower.includes(keyword.toLowerCase())
+        );
+    }
 
     if (!isCorrect) {
         document.body.classList.add("shake");
@@ -219,7 +248,12 @@ function submitLevel1() {
         return;
     }
 
-    // Correct answer!
+    // Store answer and proceed
+    state.level1Answers.push({
+        question: question.question,
+        answer: answer
+    });
+
     document.getElementById("level1Emoji").textContent = "😍";
     state.currentQuestion++;
 
@@ -227,23 +261,68 @@ function submitLevel1() {
     document.getElementById("level1ProgressBar").style.width = (state.currentQuestion / total * 100) + "%";
 
     if (state.currentQuestion >= total) {
-        // Level 1 complete!
-        showCorrectReaction("🎉", "Level 1 Complete! You're amazing! 💖");
-        setTimeout(() => {
+        // Level 1 complete! Go directly to Level 2
+        showCorrectReaction("🎉", question.response);
+        pendingAction = () => {
             hideCorrectReaction();
             state.currentLevel = 2;
             state.currentQuestion = 0;
             showPage("level2");
             loadLevel2Question();
-        }, 2000);
+        };
     } else {
-        showCorrectReaction("💕", "Yay! You remember!");
-        setTimeout(() => {
+        // Show custom response and wait for continue click
+        showCorrectReaction("💕", question.response);
+        pendingAction = () => {
             hideCorrectReaction();
             loadLevel1Question();
-        }, 1500);
+        };
     }
 }
+
+// === CONTINUE BUTTON HANDLER ===
+function continueToNext() {
+    if (pendingAction) {
+        pendingAction();
+        pendingAction = null;
+    }
+}
+
+// === TRANSITION PAGE ===
+function showTransitionPage() {
+    hideAllPages();
+    const transitionHTML = `
+        <section id="transitionPage" class="page active">
+            <div class="card glass-card">
+                <div class="emoji-large">😏🥴</div>
+                <h1>Wait...</h1>
+                <h2>Starting la nalla tha erukum .. ethuku aparm paarugaa</h2>
+                <p class="subtitle">( ETHU ENNA PRAMATHAM .. ETHA VIDA SPECIAL ITEM ONU ERUKUU ) 😉</p>
+                <button class="btn btn-primary" onclick="startLevel2()">
+                    Continue to Level 2 💕
+                </button>
+            </div>
+        </section>
+    `;
+
+    // Insert transition page
+    document.querySelector('.app-container').insertAdjacentHTML('beforeend', transitionHTML);
+}
+
+function startLevel2() {
+    // Remove transition page
+    const transitionPage = document.getElementById("transitionPage");
+    if (transitionPage) transitionPage.remove();
+
+    state.currentLevel = 2;
+    state.currentQuestion = 0;
+    showPage("level2");
+    loadLevel2Question();
+}
+
+// Make functions globally accessible for onclick handlers
+window.startLevel2 = startLevel2;
+window.continueToNext = continueToNext;
 
 // === LEVEL 2 ===
 function loadLevel2Question() {
@@ -259,15 +338,23 @@ function loadLevel2Question() {
 function submitLevel2(choice) {
     const question = LEVEL_2_DATA.questions[state.currentQuestion];
 
-    if (choice !== question.correct) {
-        document.body.classList.add("shake");
-        setTimeout(() => document.body.classList.remove("shake"), 500);
-        document.getElementById("level2Emoji").textContent = "😕";
-        showReaction("😢", "Oops! Wrong choice!", "You should know this about us! 💔");
-        return;
+    // Store the answer (no validation - accept any choice)
+    state.level2Answers.push({
+        question: question.question,
+        answer: choice
+    });
+
+    // Get custom response based on choice
+    let responseMessage;
+    if (choice === "Me" && question.responseMe) {
+        responseMessage = question.responseMe;
+    } else if (choice === "You" && question.responseYou) {
+        responseMessage = question.responseYou;
+    } else {
+        responseMessage = question.response || "✨";
     }
 
-    // Correct answer!
+    // Show reaction with custom response
     document.getElementById("level2Emoji").textContent = "😊";
     state.currentQuestion++;
 
@@ -275,26 +362,89 @@ function submitLevel2(choice) {
     document.getElementById("level2ProgressBar").style.width = (state.currentQuestion / total * 100) + "%";
 
     if (state.currentQuestion >= total) {
-        // All complete! Show surprise!
-        showCorrectReaction("🎊", "You did it! Get ready for your surprise! 💝");
-        setTimeout(() => {
+        // All complete! Show reaction page then surprise!
+        showCorrectReaction("🎊", responseMessage);
+        pendingAction = () => {
             hideCorrectReaction();
-            showSurprisePage();
-        }, 2500);
+            // Show emotional reaction page, then surprise
+            showReactionPage(() => {
+                showSurprisePage();
+            }, {
+                emoji: "🥳",
+                mainText: "You did it!",
+                subText: "Get ready for your surprise... 💕",
+                duration: 3000
+            });
+        };
     } else {
-        showCorrectReaction("✨", "You know us so well!");
-        setTimeout(() => {
+        showCorrectReaction("✨", responseMessage);
+        pendingAction = () => {
             hideCorrectReaction();
             loadLevel2Question();
-        }, 1200);
+        };
     }
 }
 
 // === SURPRISE PAGE ===
 function showSurprisePage() {
     document.getElementById("partnerName").textContent = state.userName;
+    generateFlowChart();
     showPage("surprise");
     startConfetti();
+}
+
+function generateFlowChart() {
+    const container = document.getElementById("flowChartContainer");
+    if (!container) return;
+
+    let html = '<div class="flow-chart">';
+    html += '<h3 class="flow-title">💕 Your Answers Journey 💕</h3>';
+
+    // Level 2 answers flow chart
+    html += '<div class="flow-section">';
+    html += '<div class="flow-header">Level 2: Who Are We? 💑</div>';
+
+    let meCount = 0;
+    let youCount = 0;
+
+    state.level2Answers.forEach((item, index) => {
+        const isMe = item.answer === "Me";
+        if (isMe) meCount++; else youCount++;
+
+        html += `
+            <div class="flow-item ${isMe ? 'flow-me' : 'flow-you'}">
+                <div class="flow-number">${index + 1}</div>
+                <div class="flow-content">
+                    <div class="flow-question">${item.question}</div>
+                    <div class="flow-answer">${item.answer} ${isMe ? '🙋‍♂️' : '🙋‍♀️'}</div>
+                </div>
+            </div>
+        `;
+    });
+
+    // Summary
+    html += `
+        <div class="flow-summary">
+            <div class="summary-title">Summary 📊</div>
+            <div class="summary-stats">
+                <div class="stat-item stat-me">
+                    <span class="stat-emoji">🙋‍♂️</span>
+                    <span class="stat-label">Me:</span>
+                    <span class="stat-value">${meCount}</span>
+                </div>
+                <div class="stat-item stat-you">
+                    <span class="stat-emoji">🙋‍♀️</span>
+                    <span class="stat-label">You:</span>
+                    <span class="stat-value">${youCount}</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    html += '</div>';
+    html += '</div>';
+
+    container.innerHTML = html;
 }
 
 function startConfetti() {
@@ -361,3 +511,65 @@ function createHeartsBurst() {
         container.appendChild(heart);
     }
 }
+
+// ================================================
+// REACTION PAGE START
+// Emotional expression page - reusable component
+// Usage: showReactionPage(nextPageCallback, options)
+// ================================================
+
+/**
+ * Show an emotional reaction page with auto-transition
+ * @param {Function} nextPageCallback - Function to call after animation completes
+ * @param {Object} options - Optional customization
+ * @param {string} options.emoji - Character emoji (default: "😤")
+ * @param {string} options.mainText - Main heading text
+ * @param {string} options.subText - Subtext message
+ * @param {number} options.duration - Time before transition in ms (default: 3000)
+ */
+function showReactionPage(nextPageCallback, options = {}) {
+    const page = document.getElementById("emotionalReactionPage");
+    const character = document.getElementById("reactionCharacter");
+    const mainText = document.getElementById("reactionMainText");
+    const subText = document.getElementById("reactionSubText");
+
+    // Set custom content or use defaults
+    character.textContent = options.emoji || "😤";
+    mainText.textContent = options.mainText || "Hmm… really?";
+    subText.textContent = options.subText || "Think carefully before moving on.";
+
+    const duration = options.duration || 3000;
+
+    // Show the page
+    page.style.display = "flex";
+    setTimeout(() => {
+        page.classList.add("active");
+    }, 10);
+
+    // After animation, start softening
+    setTimeout(() => {
+        page.classList.add("softening");
+    }, duration - 1000);
+
+    // Fade out and call callback
+    setTimeout(() => {
+        page.classList.add("fade-out");
+
+        setTimeout(() => {
+            page.classList.remove("active", "softening", "fade-out");
+            page.style.display = "none";
+
+            // Call the next page callback
+            if (nextPageCallback && typeof nextPageCallback === "function") {
+                nextPageCallback();
+            }
+        }, 500);
+    }, duration);
+}
+
+// Make function globally accessible
+window.showReactionPage = showReactionPage;
+
+// ================================================
+// REACTION PAGE END
+// ================================================

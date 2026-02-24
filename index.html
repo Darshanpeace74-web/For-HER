@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,12 @@
     <meta name="description" content="A special interactive experience created with love">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Quicksand:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <!-- Floating Hearts Background -->
     <div class="hearts-container" id="heartsContainer"></div>
@@ -20,17 +24,17 @@
             <div class="emoji-large">💝</div>
             <h1>Hello, My Love</h1>
             <p class="subtitle">Before we begin, let me know it's really you...</p>
-            
+
             <div class="input-group">
                 <label for="userName">Your Name</label>
                 <input type="text" id="userName" placeholder="Enter your name..." autocomplete="off">
             </div>
-            
+
             <div class="input-group">
                 <label for="anniversary">Our Anniversary Date</label>
                 <input type="text" id="anniversary" placeholder="DD/MM/YYYY" maxlength="10" autocomplete="off">
             </div>
-            
+
             <button id="validateStart" class="btn btn-primary">
                 <span>Continue</span>
                 <span class="btn-icon">💕</span>
@@ -48,14 +52,14 @@
                     <div class="progress-fill" id="level1ProgressBar"></div>
                 </div>
             </div>
-            
+
             <div class="emoji-medium" id="level1Emoji">🤔</div>
             <h2 id="level1Question">Loading question...</h2>
-            
+
             <div class="input-group">
                 <input type="text" id="level1Answer" placeholder="Type your answer..." autocomplete="off">
             </div>
-            
+
             <button id="submitLevel1" class="btn btn-primary">
                 <span>Submit Answer</span>
                 <span class="btn-icon">✨</span>
@@ -73,17 +77,17 @@
                     <div class="progress-fill" id="level2ProgressBar"></div>
                 </div>
             </div>
-            
+
             <div class="emoji-medium" id="level2Emoji">💭</div>
             <h2 id="level2Question">Loading question...</h2>
-            
+
             <div class="choice-buttons">
                 <button class="btn btn-choice" data-choice="Me">
-                    <span class="choice-emoji">🙋‍♂️</span>
+                    <span class="choice-emoji">🙋‍♀️</span>
                     <span>Me</span>
                 </button>
                 <button class="btn btn-choice" data-choice="You">
-                    <span class="choice-emoji">🙋‍♀️</span>
+                    <span class="choice-emoji">🙋‍♂️</span>
                     <span>You</span>
                 </button>
             </div>
@@ -109,29 +113,57 @@
             <div class="correct-emoji" id="correctEmoji">😍</div>
             <h2 class="correct-text" id="correctText">Yay! You remember!</h2>
             <div class="hearts-burst" id="heartsBurst"></div>
+            <button id="continueBtn" class="btn btn-continue" onclick="continueToNext()">
+                <span>Continue</span>
+                <span class="btn-icon">➡️</span>
+            </button>
         </div>
     </div>
+
+    <!-- ================================================
+         REACTION PAGE START
+         Emotional expression page - transition between levels
+         Triggered via showReactionPage(nextCallback)
+         ================================================ -->
+    <div id="emotionalReactionPage" class="emotional-reaction-page">
+        <div class="emotional-reaction-content">
+            <div class="reaction-character" id="reactionCharacter">😤</div>
+            <h1 class="reaction-main-text" id="reactionMainText">Hmm… really?</h1>
+            <p class="reaction-sub-text" id="reactionSubText">Think carefully before moving on.</p>
+        </div>
+        <div class="emotional-reaction-overlay"></div>
+    </div>
+    <!-- ================================================
+         REACTION PAGE END
+         ================================================ -->
 
     <!-- SURPRISE PAGE -->
     <section id="surprisePage" class="page">
         <div class="surprise-container">
             <div class="confetti-container" id="confettiContainer"></div>
-            
+
             <div class="card glass-card surprise-card">
+                <div class="couple-photo-container">
+                    <img src="couple-photo.jpg" alt="Our Memories" class="couple-photo">
+                </div>
                 <div class="emoji-large animated-heart">💖</div>
                 <h1 class="surprise-title">Congratulations, <span id="partnerName">My Love</span>!</h1>
-                
+
                 <div class="surprise-message">
                     <p>You made it through all the questions!</p>
                     <p>This proves how well you know us, how deeply you understand our bond.</p>
                 </div>
-                
+
                 <div class="love-letter">
                     <div class="letter-emoji">💌</div>
-                    <p>Every moment with you is a blessing. Every memory we create becomes a treasure. You are my favorite person, my safe place, my forever.</p>
+                    <p>Every moment with you is a blessing. Every memory we create becomes a treasure. You are my
+                        favorite person, my safe place, my forever.</p>
                     <p class="signature">With all my love,<br>Forever Yours 💕</p>
                 </div>
-                
+
+                <!-- Flow Chart of Answers -->
+                <div id="flowChartContainer" class="flow-chart-container"></div>
+
                 <div class="final-hearts">
                     <span>💝</span>
                     <span>💖</span>
@@ -145,4 +177,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>
